@@ -6,13 +6,9 @@ const cloudinary = require('cloudinary')
 require('dotenv').config()
 const http = require('http')
 const bcrypt = require('bcrypt')
-require('./connection')
-const server = http.createServer(app)
-const {Server} = require('socket.io')
-const io = new Server(server, {
-    cors: 'http://localhost:3002',
-    methods: ['GET', 'POST', 'PATCH', "DELETE"]
-})
+
+
+
 
 
 
@@ -30,13 +26,14 @@ app.use(express.json())
 app.use(bodyParser.json());
 
 
-// get productcategory
+
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
   })
+
 
 app.delete('/:public_id', async(req, res)=> {
     const {public_id} = req.params;
@@ -57,6 +54,7 @@ app.get('/products', async (req, res) => {
     res.status(500).json({ error: 'Error fetching products' });
   }
 });
+
   // get category
   
 app.get('/products/category/:category', async (req, res) => {
@@ -95,7 +93,10 @@ app.get('/admin', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-// products analysis
+
+
+// products analysis stats for admin page
+
   app.get('/products/stats', async (req, res) => {
     try {
       const sumProducts = await Product.countDocuments();
@@ -171,4 +172,3 @@ app.listen(4000, ()=> {
     console.log('server running at port', 4000)
   })
   
-  app.set('socketio', io);
